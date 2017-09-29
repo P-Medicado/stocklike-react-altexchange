@@ -2,17 +2,17 @@
 ### PrettySights & LeasJ
 
 
-### Pre req
-node 6+
-
-npm 3+
-
-
+With node/npm global run the project so:
 ```
-$ git clone https://github.com/rrag/react-stockcharts-examples2
-$ cd examples/<example you wish>
-
 $ npm install
 
-$ npm start # this should launch a browser with http://localhost:3000
+$ npm start #
 ```
+
+Make changes in ```src/```
+Page style changes in ``` public/index.html ```
+
+#### src/
+Chart Design/Features - Chart.js
+Data - utils.js
+Else - index.js
