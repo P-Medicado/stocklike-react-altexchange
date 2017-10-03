@@ -1,35 +1,35 @@
+// Imports
+	import React from "react";
+	import PropTypes from "prop-types";
 
-import React from "react";
-import PropTypes from "prop-types";
+	import { format } from "d3-format";
+	import { timeFormat } from "d3-time-format";
 
-import { format } from "d3-format";
-import { timeFormat } from "d3-time-format";
+	import { ChartCanvas, Chart } from "react-stockcharts";
+	import {
+		BarSeries,
+		AreaSeries,
+		CandlestickSeries,
+		LineSeries,
+		MACDSeries,
+	} from "react-stockcharts/lib/series";
+	import { XAxis, YAxis } from "react-stockcharts/lib/axes";
+	import {
+		CrossHairCursor,
+		EdgeIndicator,
+		CurrentCoordinate,
+		MouseCoordinateX,
+		MouseCoordinateY,
+	} from "react-stockcharts/lib/coordinates";
 
-import { ChartCanvas, Chart } from "react-stockcharts";
-import {
-	BarSeries,
-	AreaSeries,
-	CandlestickSeries,
-	LineSeries,
-	MACDSeries,
-} from "react-stockcharts/lib/series";
-import { XAxis, YAxis } from "react-stockcharts/lib/axes";
-import {
-	CrossHairCursor,
-	EdgeIndicator,
-	CurrentCoordinate,
-	MouseCoordinateX,
-	MouseCoordinateY,
-} from "react-stockcharts/lib/coordinates";
-
-import { discontinuousTimeScaleProvider } from "react-stockcharts/lib/scale";
-import {
-	OHLCTooltip,
-	MovingAverageTooltip,
-	MACDTooltip,
-} from "react-stockcharts/lib/tooltip";
-import { ema, macd, sma } from "react-stockcharts/lib/indicator";
-import { fitWidth } from "react-stockcharts/lib/helper";
+	import { discontinuousTimeScaleProvider } from "react-stockcharts/lib/scale";
+	import {
+		OHLCTooltip,
+		MovingAverageTooltip,
+		MACDTooltip,
+	} from "react-stockcharts/lib/tooltip";
+	import { ema, macd, sma } from "react-stockcharts/lib/indicator";
+	import { fitWidth } from "react-stockcharts/lib/helper";
 
 const macdAppearance = {
 	stroke: {
@@ -191,7 +191,7 @@ CandleStickChartWithMACDIndicator.propTypes = {
 };
 
 CandleStickChartWithMACDIndicator.defaultProps = {
-	type: "svg",
+	type: "hybrid",
 };
 
 CandleStickChartWithMACDIndicator = fitWidth(CandleStickChartWithMACDIndicator);
