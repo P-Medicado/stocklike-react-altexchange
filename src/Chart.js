@@ -1,4 +1,12 @@
+import CandleStickChartWithMACDIndicator from "./CandleStickChartWithMACDIndicator";
+import updatingDataWrapper from "./updatingDataWrapper";
 
+const CandleStickChartWithUpdatingData = updatingDataWrapper(CandleStickChartWithMACDIndicator);
+
+export default CandleStickChartWithUpdatingData;
+
+
+/*
 import React from "react";
 import PropTypes from "prop-types";
 
@@ -285,3 +293,4 @@ CandleStickChartWithDarkTheme.defaultProps = {
 CandleStickChartWithDarkTheme = fitWidth(CandleStickChartWithDarkTheme);
 
 export default CandleStickChartWithDarkTheme;
+*/
