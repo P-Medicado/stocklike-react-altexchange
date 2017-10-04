@@ -3,16 +3,24 @@
 import { tsvParse, csvParse } from  "d3-dsv";
 import { timeParse } from "d3-time-format";
 
-function parseData(parse) {
-	console.warn("test parse: ", parse);
-	return function(d) {
-		d.date = parse(d.date);
-		d.open = +d.open;
-		d.high = +d.high;
-		d.low = +d.low;
-		d.close = +d.close;
-		d.volume = +d.volume;
-
+function parseData(parseFunction) {
+	return function(d, index, array) {
+		// console.log(d);
+		d.price = +d.price;
+		d.amount = +d.amount;
+		d.date = parseFunction(d.timestampms);
+		d.previousPrice = array[(index || 1) - 1].price;
+		d.split = null;
+		d.dividend = null;
+		d.absoluteChange = null;
+		d.percentChange = null;
+		// Stock Ops	
+			// d.date = parse(d.date);
+			// d.open = +d.open;
+			// d.high = +d.high;
+			// d.low = +d.low;
+			// d.close = +d.close;
+			// d.volume = +d.volume;
 		return d;
 	};
 }
@@ -20,6 +28,7 @@ function parseData(parse) {
 const parseDate = timeParse("%Y-%m-%d");
 
 export function getData() {
+	/*
 	const promiseMSFT2 = new Promise((resolve, reject) => {
 		var data = 
 		`		date	open	high	low	close	volume	split	dividend	absoluteChange	percentChange
@@ -59,12 +68,18 @@ export function getData() {
 		2010-02-22	24.06965319596241	24.15311329961183	23.91108058475461	23.977848	36707100		
 		2010-02-23	23.93611844264031	24.061307346629015	23.443708753618075	23.644011	36707100`;
 		resolve(data);
-		reject(data);
-	});
+	}).then(data => tsvParse(data, parseData(parseDate)));
+	*/
+
 	// const promiseMSFT = fetch("//rrag.github.io/react-stockcharts/data/MSFT.tsv")
 	// 	.then(response => response.text())
 	// 	.then(data => tsvParse(data, parseData(parseDate)))
 
+	const promiseGemini = fetch("https://api.gemini.com/v1/trades/btcusd")
+		.then(response => response.json())
+		.then(array => array.map(parseData(ms => new Date(ms))))
+
 	//promiseMSFT2.then(x => console.log("Parsed data =>",x));
-	return promiseMSFT2.then(data => tsvParse(data, parseData(parseDate)));
+	// console.log(promiseGemini);
+	return promiseGemini;
 }
