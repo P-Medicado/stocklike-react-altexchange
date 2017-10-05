@@ -1,28 +1,71 @@
-
-
-import { tsvParse, csvParse } from  "d3-dsv";
+// import { tsvParse, csvParse } from  "d3-dsv";
 import { timeParse } from "d3-time-format";
 
 function parseData(parseFunction) {
-	return function(d, index, array) {
-		// console.log(d);
+	// return function(d, index, array) { // Passing array
+	return function(d) {
+		// Temporary Values
 		d.price = +d.price;
 		d.amount = +d.amount;
+
+		// Required
 		d.date = parseFunction(d.timestampms);
-		d.previousPrice = array[(index || 1) - 1].price;
+		d.open = null;//+d.open;
+		d.high = null;//+d.high;
+		d.low = null;//+d.low;
+		d.close = null;//+d.close;
+		d.volume = null;//+d.volume;
+
+		// Deprecated
+		// d.last = array[(index || 1) - 1].price;
+
+		// Necessary Nulls
 		d.split = null;
 		d.dividend = null;
 		d.absoluteChange = null;
 		d.percentChange = null;
-		// Stock Ops	
+
+		// Original Stock Chart Data Columns	
 			// d.date = parse(d.date);
 			// d.open = +d.open;
 			// d.high = +d.high;
 			// d.low = +d.low;
 			// d.close = +d.close;
 			// d.volume = +d.volume;
+
 		return d;
 	};
+}
+
+function parseArrayData(parseTimeFunction = null) {
+
+	function splitData(d) {
+		return [
+			d.slice(0,10),
+			d.slice(10,20),
+			d.slice(30,40),
+			d.slice(40,50)
+		];
+	}
+
+	return function(preformattedData) {
+
+		var d = splitData(preformattedData);
+
+		d.date = new Date(d[0].timestampms); 
+				//parseTimeFunction(d[0].timestampms);
+		d.open = d[0].price;
+		d.close = d[d.length - 1].price;
+
+		var dPrices = d.map(dRecord => dRecord.price);
+
+		d.high = dPrices.reduce(Math.max);
+		d.low = dPrices.reduce(Math.min);
+
+		d.volume = d.reduce((sum, d) => sum + d.amount, 0);
+
+		return d;
+	}
 }
 
 const parseDate = timeParse("%Y-%m-%d");
@@ -68,18 +111,19 @@ export function getData() {
 		2010-02-22	24.06965319596241	24.15311329961183	23.91108058475461	23.977848	36707100		
 		2010-02-23	23.93611844264031	24.061307346629015	23.443708753618075	23.644011	36707100`;
 		resolve(data);
-	}).then(data => tsvParse(data, parseData(parseDate)));
+	}).then(data => tsvParse(data, parseData(parseDate)))
+	.then(x => console.log("Parsed data =>",x));
 	*/
 
-	// const promiseMSFT = fetch("//rrag.github.io/react-stockcharts/data/MSFT.tsv")
-	// 	.then(response => response.text())
-	// 	.then(data => tsvParse(data, parseData(parseDate)))
+	/*
+	const promiseArrayGemini = fetch("https://api.gemini.com/v1/trades/btcusd")
+		.then(response => response.json())
+		.then(array => array.map(parseData(ms => new Date(ms))));
+	*/
 
 	const promiseGemini = fetch("https://api.gemini.com/v1/trades/btcusd")
 		.then(response => response.json())
-		.then(array => array.map(parseData(ms => new Date(ms))))
+		.then(parseArrayData());
 
-	//promiseMSFT2.then(x => console.log("Parsed data =>",x));
-	// console.log(promiseGemini);
 	return promiseGemini;
 }
