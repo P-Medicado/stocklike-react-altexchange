@@ -50,21 +50,26 @@ function parseArrayData(parseTimeFunction = null) {
 
 	return function(preformattedData) {
 
-		var d = splitData(preformattedData);
+		var splitD = splitData(preformattedData);
 
-		d.date = new Date(d[0].timestampms); 
-				//parseTimeFunction(d[0].timestampms);
-		d.open = d[0].price;
-		d.close = d[d.length - 1].price;
+		return splitD.map(function(d) {
+			var dSummary = {};
+			dSummary.date = new Date(d[0].timestampms); 
+							//parseTimeFunction(d[0].timestampms);
+			dSummary.open = +d[0].price;
+			dSummary.close = +d[d.length - 1].price;
 
-		var dPrices = d.map(dRecord => dRecord.price);
+			var dPrices = d.map(dRecord => +dRecord.price);
 
-		d.high = dPrices.reduce(Math.max);
-		d.low = dPrices.reduce(Math.min);
+			dSummary.high = dPrices.reduce((foldingPrice, currentPrice) => 
+								Math.max(foldingPrice, currentPrice));
+			dSummary.low = dPrices.reduce((foldingPrice, currentPrice) => 
+								Math.min(foldingPrice, currentPrice));
 
-		d.volume = d.reduce((sum, d) => sum + d.amount, 0);
-
-		return d;
+			dSummary.volume = d.reduce((sum, d) => sum + +d.amount, 0);
+			
+			return dSummary;
+		});
 	}
 }
 
