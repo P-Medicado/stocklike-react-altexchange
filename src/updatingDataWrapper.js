@@ -1,5 +1,6 @@
 
 import React from "react";
+import { getData } from "./utils";
 
 function getDisplayName(ChartComponent) {
 	const name = ChartComponent.displayName || ChartComponent.name || "ChartComponent";
@@ -7,7 +8,7 @@ function getDisplayName(ChartComponent) {
 }
 
 export default function updatingDataWrapper(ChartComponent) {
-	const LENGTH = 4;
+	const LENGTH = 6;
 
 	class UpdatingComponentHOC extends React.Component {
 		constructor(props) {
@@ -16,15 +17,15 @@ export default function updatingDataWrapper(ChartComponent) {
 				length: LENGTH,
 				data: this.props.data.slice(0, LENGTH),
 			};
-			this.speed = 1500;
+			this.speed = 2000;
 			// this.onKeyPress = this.onKeyPress.bind(this);
 
 			// Prepare autoload data
 			this.func = () => {
 				if (this.state.length < this.props.data.length) {
 					this.setState({
-						length: this.state.length + 1,
-						data: this.props.data.slice(0, this.state.length + 1),
+						length: this.state.length + 4,
+						data: this.props.data.slice(0, this.state.length + 4),
 					});
 				}
 			};
@@ -35,6 +36,7 @@ export default function updatingDataWrapper(ChartComponent) {
 				console.log("this.speed  = ", this.speed);
 				this.interval = setInterval(this.func, this.speed);
 			}
+
 		}
 		componentDidMount() {
 			document.addEventListener("keyup", this.onKeyPress);

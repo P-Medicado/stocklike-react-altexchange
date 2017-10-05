@@ -1,51 +1,21 @@
 // import { tsvParse, csvParse } from  "d3-dsv";
 import { timeParse } from "d3-time-format";
 
-function parseData(parseFunction) {
-	// return function(d, index, array) { // Passing array
-	return function(d) {
-		// Temporary Values
-		d.price = +d.price;
-		d.amount = +d.amount;
-
-		// Required
-		d.date = parseFunction(d.timestampms);
-		d.open = null;//+d.open;
-		d.high = null;//+d.high;
-		d.low = null;//+d.low;
-		d.close = null;//+d.close;
-		d.volume = null;//+d.volume;
-
-		// Deprecated
-		// d.last = array[(index || 1) - 1].price;
-
-		// Necessary Nulls
-		d.split = null;
-		d.dividend = null;
-		d.absoluteChange = null;
-		d.percentChange = null;
-
-		// Original Stock Chart Data Columns	
-			// d.date = parse(d.date);
-			// d.open = +d.open;
-			// d.high = +d.high;
-			// d.low = +d.low;
-			// d.close = +d.close;
-			// d.volume = +d.volume;
-
-		return d;
-	};
-}
-
 function parseArrayData(parseTimeFunction = null) {
 
 	function splitData(d) {
+		// console.log(d.slice(0,10));
 		return [
-			d.slice(0,10),
-			d.slice(10,20),
-			d.slice(30,40),
-			d.slice(40,50)
-		];
+			d.slice(0,5),
+			d.slice(10,15),
+			d.slice(15,20),
+			d.slice(20,25),
+			d.slice(25,30),
+			d.slice(30,35),
+			d.slice(35,40),
+			d.slice(40,45),
+			d.slice(45,50)
+			];
 	}
 
 	return function(preformattedData) {

@@ -1,35 +1,35 @@
+// Imports
+	import React from "react";
+	import PropTypes from "prop-types";
 
-import React from "react";
-import PropTypes from "prop-types";
+	import { format } from "d3-format";
+	import { timeFormat } from "d3-time-format";
 
-import { format } from "d3-format";
-import { timeFormat } from "d3-time-format";
+	import { ChartCanvas, Chart } from "react-stockcharts";
+	import {
+		BarSeries,
+		AreaSeries,
+		CandlestickSeries,
+		LineSeries,
+		MACDSeries,
+	} from "react-stockcharts/lib/series";
+	import { XAxis, YAxis } from "react-stockcharts/lib/axes";
+	import {
+		CrossHairCursor,
+		EdgeIndicator,
+		CurrentCoordinate,
+		MouseCoordinateX,
+		MouseCoordinateY,
+	} from "react-stockcharts/lib/coordinates";
 
-import { ChartCanvas, Chart } from "react-stockcharts";
-import {
-	BarSeries,
-	AreaSeries,
-	CandlestickSeries,
-	LineSeries,
-	MACDSeries,
-} from "react-stockcharts/lib/series";
-import { XAxis, YAxis } from "react-stockcharts/lib/axes";
-import {
-	CrossHairCursor,
-	EdgeIndicator,
-	CurrentCoordinate,
-	MouseCoordinateX,
-	MouseCoordinateY,
-} from "react-stockcharts/lib/coordinates";
-
-import { discontinuousTimeScaleProvider } from "react-stockcharts/lib/scale";
-import {
-	OHLCTooltip,
-	MovingAverageTooltip,
-	MACDTooltip,
-} from "react-stockcharts/lib/tooltip";
-import { ema, macd, sma } from "react-stockcharts/lib/indicator";
-import { fitWidth } from "react-stockcharts/lib/helper";
+	import { discontinuousTimeScaleProvider } from "react-stockcharts/lib/scale";
+	import {
+		OHLCTooltip,
+		MovingAverageTooltip,
+		MACDTooltip,
+	} from "react-stockcharts/lib/tooltip";
+	import { ema, macd, sma } from "react-stockcharts/lib/indicator";
+	import { fitWidth } from "react-stockcharts/lib/helper";
 
 const macdAppearance = {
 	stroke: {
@@ -90,14 +90,14 @@ class CandleStickChartWithMACDIndicator extends React.Component {
 				ratio={ratio}
 				margin={{ left: 70, right: 70, top: 20, bottom: 30 }}
 				type={type}
-				seriesName="MSFT"
+				seriesName="GEMINI"
 				data={data}
 				xScale={xScale}
 				xAccessor={xAccessor}
 				displayXAccessor={displayXAccessor}
 			>
 				<Chart id={1} height={400}
-					yExtents={[d => [d.high, d.low], ema26.accessor(), ema12.accessor()]}
+					yExtents={[d => [d.high * 1.001, d.low *.999], ema26.accessor(), ema12.accessor()]}
 					padding={{ top: 10, bottom: 20 }}
 				>
 					<XAxis axisAt="bottom" orient="bottom" showTicks={false} outerTickSize={0} />
@@ -116,7 +116,7 @@ class CandleStickChartWithMACDIndicator extends React.Component {
 					<CurrentCoordinate yAccessor={ema12.accessor()} fill={ema12.stroke()} />
 
 					<EdgeIndicator itemType="last" orient="right" edgeAt="right"
-						yAccessor={d => d.close} fill={d => d.close > d.open ? "#6BA583" : "#FF0000"}/>
+						yAccessor={d => d.close} fill={d => d.close >= d.open ? "#6BA583" : "#FF0000"}/>
 
 					<OHLCTooltip origin={[-40, 0]}/>
 					<MovingAverageTooltip
@@ -149,7 +149,7 @@ class CandleStickChartWithMACDIndicator extends React.Component {
 						orient="left"
 						displayFormat={format(".4s")} />
 
-					<BarSeries yAccessor={d => d.volume} fill={d => d.close > d.open ? "#6BA583" : "#FF0000"} />
+					<BarSeries yAccessor={d => d.volume} fill={d => d.close >= d.open ? "#6BA583" : "#FF0000"} />
 					<AreaSeries yAccessor={smaVolume50.accessor()} stroke={smaVolume50.stroke()} fill={smaVolume50.fill()}/>
 				</Chart>
 				<Chart id={3} height={150}
