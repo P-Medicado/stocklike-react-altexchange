@@ -33,11 +33,11 @@
 
 const macdAppearance = {
 	stroke: {
-		macd: "#FF0000",
-		signal: "#00F300",
+		macd: "#0FFFFF",
+		signal: "#FFF300",
 	},
 	fill: {
-		divergence: "#4682B4"
+		divergence: "#46FF94"
 	},
 };
 
@@ -90,7 +90,7 @@ class CandleStickChartWithMACDIndicator extends React.Component {
 				ratio={ratio}
 				margin={{ left: 70, right: 70, top: 20, bottom: 30 }}
 				type={type}
-				seriesName="MSFT"
+				seriesName="GEMINI"
 				data={data}
 				xScale={xScale}
 				xAccessor={xAccessor}
@@ -102,7 +102,7 @@ class CandleStickChartWithMACDIndicator extends React.Component {
 					padding={{ top: 10, bottom: 20 }}
 				>
 					<XAxis axisAt="bottom" orient="bottom" showTicks={false} outerTickSize={0} />
-					<YAxis axisAt="right" orient="right" ticks={5} />
+					<YAxis axisAt="right" orient="right" ticks={5} fill="#fff" />
 
 					<MouseCoordinateY
 						at="right"
@@ -116,6 +116,7 @@ class CandleStickChartWithMACDIndicator extends React.Component {
 					<CurrentCoordinate yAccessor={ema26.accessor()} fill={ema26.stroke()} />
 					<CurrentCoordinate yAccessor={ema12.accessor()} fill={ema12.stroke()} />
 
+					{/* Right Edge Tag */}
 					<EdgeIndicator itemType="last" orient="right" edgeAt="right"
 						yAccessor={d => d.price} fill={d => d.price > d.previousPrice ? "#6BA583" : "#FF0000"}/>
 
@@ -150,7 +151,7 @@ class CandleStickChartWithMACDIndicator extends React.Component {
 						orient="left"
 						displayFormat={format(".4s")} />
 
-					<BarSeries yAccessor={d => d.amount} fill={d => d.price > d.previousPrice ? "#6BA583" : "#FF0000"} />
+					<BarSeries yAccessor={d => d.amount} fill={d => d.type == "buy" ? "#6BD583" : "#FF0000"} />
 					<AreaSeries yAccessor={smaVolume50.accessor()} stroke={smaVolume50.stroke()} fill={smaVolume50.fill()}/>
 				</Chart>
 				<Chart id={3} height={150}
