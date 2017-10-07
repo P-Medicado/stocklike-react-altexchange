@@ -4,9 +4,10 @@ import { timeParse } from "d3-time-format";
 function parseArrayData(parseTimeFunction = null) {
 
 	function splitData(d) {
-		// console.log(d.slice(0,10));
+		console.log(d);
 		return [
 			d.slice(0,5),
+			d.slice(5,10),
 			d.slice(10,15),
 			d.slice(15,20),
 			d.slice(20,25),
