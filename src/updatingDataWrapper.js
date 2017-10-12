@@ -8,11 +8,13 @@ function getDisplayName(ChartComponent) {
 }
 
 export default function updatingDataWrapper(ChartComponent) {
-	const LENGTH = 6;
+	const LENGTH = 8;
 
 	class UpdatingComponentHOC extends React.Component {
 		constructor(props) {
 			super(props);
+			this.data = this.props.data;
+			console.assert(this.data.length != 10, "Initial GET Successful?");
 			this.state = {
 				length: LENGTH,
 				data: this.props.data.slice(0, LENGTH),
@@ -22,33 +24,43 @@ export default function updatingDataWrapper(ChartComponent) {
 
 			// Prepare autoload data
 			this.func = () => {
-				if (this.state.length < this.props.data.length) {
+				// if (this.state.length < this.props.data.length) {
+				if (this.state.length < this.data.length) {
 					this.setState({
-						length: this.state.length + 4,
-						data: this.props.data.slice(0, this.state.length + 4),
+						length: this.state.length + 1,
+						data: this.data.slice(0, this.state.length + 1),
 					});
+				}
+				else if(this.state.length === this.data.length) {
+					var dTempLength = this.data.length;
+					getData().then(n_data =>{n_data.forEach(d => this.data.push(d)); console.assert(dTempLength > this.data.length, "Fetched More?")});
+				}
+				else{
+					console.error("Critical Error: updatingDataWrapper.js:37 -> this.func");
+					console.warn("State: ",this.state.data);
+					console.warn("Data: ",this.data);
 				}
 			};
 
 			// Execute autoload data
 			if (this.func) {
 				if (this.interval) clearInterval(this.interval);
-				console.log("this.speed  = ", this.speed);
 				this.interval = setInterval(this.func, this.speed);
+				// this.timedGet = setInterval(this.getData, this.waitTime)
+
 			}
 
 		}
 		componentDidMount() {
-			document.addEventListener("keyup", this.onKeyPress);
+			// document.addEventListener("keyup", this.onKeyPress);
 		}
 		componentWillUnmount() {
 			if (this.interval) clearInterval(this.interval);
-			document.removeEventListener("keyup", this.onKeyPress);
+			// document.removeEventListener("keyup", this.onKeyPress);
 		}
 		/*
 		onKeyPress(e) {
 			const keyCode = e.which;
-			console.log(keyCode);
 			switch (keyCode) {
 			case 50: {
 					// 2 (50) - Start alter data
@@ -97,7 +109,6 @@ export default function updatingDataWrapper(ChartComponent) {
 			}
 			if (this.func) {
 				if (this.interval) clearInterval(this.interval);
-				console.log("this.speed  = ", this.speed);
 				this.interval = setInterval(this.func, this.speed);
 			}
 		}

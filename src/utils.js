@@ -4,25 +4,17 @@ import { timeParse } from "d3-time-format";
 function parseArrayData(parseTimeFunction = null) {
 
 	function splitData(d) {
-		console.log(d);
-		return [
-			d.slice(0,5),
-			d.slice(5,10),
-			d.slice(10,15),
-			d.slice(15,20),
-			d.slice(20,25),
-			d.slice(25,30),
-			d.slice(30,35),
-			d.slice(35,40),
-			d.slice(40,45),
-			d.slice(45,50)
-			];
+		var i,j = 0,temparray,chunk = 5,dSplitList = [];
+		for (i=0; i<d.length; i+=chunk) {
+			dSplitList[j] = d.slice(i,i+chunk);
+			j++;
+		}
+		return dSplitList;
 	}
 
 	return function(preformattedData) {
-
 		var splitD = splitData(preformattedData);
-
+		// console.log("Split Data and Organized in list: "+(splitD.length*splitD[0].length),splitD);
 		return splitD.map(function(d) {
 			var dSummary = {};
 			dSummary.date = new Date(d[0].timestampms); 
@@ -38,7 +30,7 @@ function parseArrayData(parseTimeFunction = null) {
 								Math.min(foldingPrice, currentPrice));
 
 			dSummary.volume = d.reduce((sum, d) => sum + +d.amount, 0);
-			
+			// console.log("dSum: -> ",dSummary);
 			return dSummary;
 		});
 	}
@@ -88,7 +80,6 @@ export function getData() {
 		2010-02-23	23.93611844264031	24.061307346629015	23.443708753618075	23.644011	36707100`;
 		resolve(data);
 	}).then(data => tsvParse(data, parseData(parseDate)))
-	.then(x => console.log("Parsed data =>",x));
 	*/
 
 	/*
